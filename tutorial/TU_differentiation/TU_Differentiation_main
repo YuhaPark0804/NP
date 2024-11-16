@@ -1,0 +1,97 @@
+/*------------------------------------------------------------------------------\
+@ Numerical Methods by Yuha Park - Handong Global University
+
+Author          : Yuha Park
+Created         : 09-13-2024
+Modified        : 09-18-2024
+Language/ver	: C in MSVS2017
+Course		: Numerical Programming
+
+Description      : [Tutorial]Differentiation_main.cpp
+-------------------------------------------------------------------------------*/
+
+#include "stdio.h"
+#include "stdlib.h"
+
+#include "../../include/myNP_22000287.h"
+
+double myFunc(const double x);
+
+
+int main(int argc, char* argv[])
+{
+
+	/*==========================================================================*/
+	/*   Part 1 -     Differentiation from discrete dataset points              */
+	/*==========================================================================*/
+
+	printf("\n**************************************************");
+	printf("\n|                     PART 1.                    |");
+	printf("\n**************************************************\n");
+
+	/************      Variables declaration & initialization      ************/
+	int m = 12;
+	double t[12] = { 0 };
+	for (int i = 0; i < m; i++) t[i] = 0.5 * (i - 2); //-1, -0.5, 0, 0.5 ...
+
+	double x[] = { -3.632, -0.3935, 1, 0.6487, -1.282, -4.518, -8.611, -12.82, -15.91, -15.88, -9.402, 9.017 };
+
+	double  dxdt[12] = { 0 };
+
+	/************      Solve  &	Show Output	   ************/
+	// Differentiation from discrete dataset points
+
+	gradient1D(t, x, dxdt, m);
+	printVec(dxdt, m);
+
+
+
+	/*==========================================================================*/
+	/*   Part 2 -     Differentiation from a function                           */
+	/*==========================================================================*/
+
+
+	printf("\n**************************************************");
+	printf("\n|                     PART 2.                    |");
+	printf("\n**************************************************\n");
+
+	/************      Variables declaration & initialization      ************/
+	double xin = 2;
+	m = 21;
+	double dydx[21] = { 0 };  // m = 21 points
+	double dy2dx2[21] = { 0 };  // m = 21 points
+
+	// User defined function F(x)
+	double y = myFunc(xin);
+	printf("\n y=myFun(xin) = %f \n\n", y);
+
+	double _t[21] = { 0 };
+	for (int i = 0; i < 21; i++) _t[i] = 0.2 * i;   //0, 0.2, 0.4 ...4
+
+
+	/************      Solve  &	Show Output	   ************/
+	// Estimate differentiation from the user defined function 
+
+	
+	gradientFunc(myFunc, _t, dydx, m);
+	printVec(dydx, m);
+
+	double _y[21] = { 0 };
+	for (int i = 0; i < m; i++) {   //m = 21
+		_y[i] = myFunc(_t[i]);       //y = x^3, x=0,0.2...
+	}
+
+	acceleration(_t, _y, dy2dx2, m);
+	printVec(dy2dx2, m);
+
+
+	system("pause");
+	return 0;
+}
+
+
+// User defined function:  example  y=x*x*x
+// Modify to User Function
+double myFunc(const double x) {
+	return  x * x * x;
+}
