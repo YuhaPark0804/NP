@@ -1,0 +1,138 @@
+/*------------------------------------------------------------------------------------------\
+@ Numerical Methods by Park Yuha - Handong Global University
+
+Author          : Park Yuha
+Created         : 09-06-2024
+Modified        : 09-12-2024
+Language/ver    : C /  MSVS2017
+Course          : Numerical method 2024-2
+Description     : Tutorial of Bisection Method & Newton-Raphson Method
+/------------------------------------------------------------------------------------------*/
+
+
+#include "stdio.h"
+#include "stdlib.h"
+#include <math.h>
+#include "../../include/myNP_22000287.h"
+
+
+/*
+// Move function declaration to  `myNP.h`
+double bisection(float _a0, float _b0, float _tol);
+double newtonRaphson(double _x0, double _tol);
+double func(double x);
+double dfunc(double x);
+*/
+
+/* function f(x) of the problem */
+double func(double theta)
+{
+	int x = 20; //[m]
+	int y = 2; //[m]
+	int v = 17; //[m/s]
+	double g = 9.8; //[m/s^2]
+
+	double Theta = (PI / 180) * theta;
+
+	double F = 0;
+	F = x * (tan(Theta)) - (g * pow(x, 2)) / (2 * pow(v, 2) * pow(cos(Theta), 2)) - y;
+	
+	return F;
+}
+
+/* first derivative of function f(x) of the problem */
+double dfunc(double theta)
+{
+	int x = 20;		//[m]
+	int y = 2;		//[m]
+	int v = 17;		//[m/s]
+	double g = 9.8; //[m/s^2]
+
+	double Theta = (PI / 180) * theta;
+
+	double dF = 0;
+
+	double sec_theta = 1 / cos(Theta); // sec(theta)
+
+	double term1 = x * sec_theta * sec_theta; // x * sec^2(theta)
+	double term2 = (g * x * x * sin(2 * Theta)) / (pow(cos(Theta), 4) * 2 * v * v); // g * x^2 * sin(theta) / (cos^3(theta) * v^2)
+	
+	dF = term1 - term2;
+	return dF;
+}
+
+void main() {
+
+	/*==========================================================================*/
+	/*               Tutorial -     Bisection Method                            */
+	/*==========================================================================*/
+
+	/************      Variables declaration & initialization      ************/
+	double tol = 1e-5;
+	double a0 = 25;			//need to change initial value
+	double b0 = 30;			//need to change initial value
+	double sol_bm = 0;
+
+	/************      Solve  &		Show Output			           ************/
+	printf("------------------------------------------------------------------------------------\n");
+	printf("         Bisection Method Results             \n");
+	printf("------------------------------------------------------------------------------------\n");
+
+	printf("Bisection Method:\n");
+	sol_bm = bisection(func, a0, b0, tol);
+
+	printf("Final Solution: %f \t", sol_bm);
+	printf("\n");
+
+
+
+	/*==========================================================================*/
+	/*               Assignment -     Newton Rhapson                            */
+	/*==========================================================================*/
+
+	/************      Variables declaration & initialization      ************/
+	double sol_nr = 0;
+	double x0 = 28;
+
+	printf("------------------------------------------------------------------------------------\n");
+	printf("         Newton-Raphson Method Results             \n");
+	printf("------------------------------------------------------------------------------------\n");
+
+	/************      Solve  &		Show Output			           ************/
+	printf("Newton-Raphson Method Result:\n");
+	sol_nr = newtonRaphson(func, dfunc, x0, tol);
+
+	printf("Final Solution: %f \t", sol_nr);
+	printf("\n");
+
+
+	/*==========================================================================*/
+	/*               Assignment -     Secant Method                           */
+	/*==========================================================================*/
+
+	/************      Variables declaration & initialization      ************/
+
+	double sol_sm = 0;
+	double Ans0 = 27;
+	double Ans1 = 29;
+
+	printf("------------------------------------------------------------------------------------\n");
+	printf("         Secant Method Results             \n");
+	printf("------------------------------------------------------------------------------------\n");
+
+	/************      Solve  &		Show Output			           ************/
+	printf("Secant Method Result:\n");
+	sol_sm = secant_method(func, Ans0, Ans1, tol);
+
+	printf("Final Solution: %f \t", sol_sm);
+	printf("\n");
+
+	system("pause");
+}
+
+
+
+
+
+
+
