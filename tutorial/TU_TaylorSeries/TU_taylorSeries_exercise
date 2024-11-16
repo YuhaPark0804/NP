@@ -1,0 +1,48 @@
+/*-------------------------------------------------------------------------------\
+@ C-Tutorial by Yuha-Park - Handong Global University
+Author           : Yuha-Park 22000287
+Created          : 30-08-2024
+Modified         : 30-08-2024
+Language/ver     : C in MSVS2022
+Description      : TU_taylorSeries_exercise.cpp
+-------------------------------------------------------------------------------*/
+
+#include "../../include/myNP_tutorial.h"
+
+
+int main(int argc, char* argv[])
+{
+
+	double x = PI / 6; // [rad]
+	double S_N = 0;
+
+	/*===== Select the function to call =====*/
+	S_N = sinTaylor(x); // [rad]
+
+
+	printf("\n\n");
+	printf("=======================================\n");
+	printf("    sin( %f[rad] ) Calculation   \n", x);
+	printf("=======================================\n");
+	printf("   -  My     result = %3.12f    \n", S_N);
+	printf("   -  Math.h result = %3.12f    \n", sin(x));
+	printf("   -  absolute err. = %3.12f    \n", S_N - sin(x));
+	printf("=======================================\n");
+
+	double xdeg = 30; // [deg]
+	S_N = sindTaylor(xdeg);
+
+	printf("\n\n");
+	printf("=======================================\n");
+	printf("    sin( %f[deg] ) Calculation   \n", xdeg);
+	printf("=======================================\n");
+	printf("   -  My     result = %3.12f    \n", S_N);
+	printf("   -  Math.h result = %3.12f    \n", sin(x));
+	printf("   -  absolute err. = %3.12f    \n", S_N - sin(x));
+	printf("=======================================\n");
+
+
+	system("pause");
+	return 0;
+}
+
