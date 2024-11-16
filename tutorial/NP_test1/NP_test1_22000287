@@ -1,0 +1,209 @@
+/*----------------------------------------------------------------\
+@ Numerical Methods by Young-Keun Kim - Handong Global University
+
+Author           : [Yuha PArk]  <--- MODIFY!!!!!
+Created          : 10-07-2024
+Modified         : 10-07-2024
+Language/ver     : C++ in MSVS2022
+
+Description      : MidTerm2024 - Part 1 (Q1~Q3)
+----------------------------------------------------------------*/
+
+// Include your library "myNP.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include <math.h>
+#include "../../include/myNP_22000287.h"
+
+//#define M  20
+
+
+double func_Q1(double x);
+double dfunc_Q1(double x);
+double func_Q2(double x);
+double func_Q3(double x);
+double myfunc4(double x, double y);
+
+int main(int argc, char* argv[])
+{
+
+	printf("\n**************************************************");
+	printf("\n|                   Question 1.                  |");
+	printf("\n**************************************************\n");
+
+	double x0_Q1 = 6.0;
+	double tol = 1e-5;
+	double x_Q1 = 0.0;
+	
+	//
+	x_Q1 = newtonRaphson(func_Q1, dfunc_Q1, x0_Q1, tol);
+
+	printf("\n answer of Q1  x= %f\n\n", x_Q1);
+
+
+
+	printf("\n**************************************************");
+	printf("\n|                   Question 2.                  |");
+	printf("\n**************************************************\n");
+
+	
+	
+
+	double h = 0.01;
+	double x_Q2[M_NP] = { 2.0, };
+	
+
+	for (int i = 1; i < M_NP; i++) {
+		x_Q2[i] = x_Q2[i - 1] + h;
+
+	}
+	
+
+	double dydx_Q2 = 0;
+	double dydx[M_NP] = { 0.0 };
+	
+	//double m = 1;
+
+	
+	gradientFunc(func_Q2, x_Q2, dydx, M_NP);
+	dydx_Q2 = dydx[0];
+	//dydx_Q2 = (-3 * func_Q2(x_Q2[0]) + 4 * func_Q2(x_Q2[1]) - func_Q2(x_Q2[2])) / (2*h);
+;
+
+	printf("\nanswer of Q2 dydx= %f\n\n", dydx_Q2);
+
+
+
+
+
+	printf("\n**************************************************");
+	printf("\n|                   Question 3.                  |");
+	printf("\n**************************************************\n");
+
+	double a = 0.0;
+	double b = 1.2;
+	int    N = 12;
+	double I_Q3 = 0.0;
+
+
+	//integral(double func(const double x), double a, double b, int n)
+	I_Q3 = integral(func_Q3, a, b, N);
+
+	printf("\nanswer of Q3 I= %f\n\n", I_Q3);
+
+
+
+
+	
+	printf("\n**************************************************");
+	printf("\n|                   Question 4.                  |");
+	printf("\n**************************************************\n");
+
+	    // Print the result in the range of t: 0 ~ 0.5 [sec]
+		// Print the result in the range of t: 1.5 ~ 2 [sec]
+
+		// Q4
+
+	double dydx_t[M_NP][M_NP] = { 0 };
+	double dydt_t[M_NP][M_NP] = { 0 };
+	double dy2dx2[M_NP][M_NP] = { 0 };
+	double dy2dt2[M_NP][M_NP] = { 0 };
+	double t[M_NP] = { 0 }; //1
+	double x[M_NP] = { 0 }; //0.2
+
+	/*
+	double hh = 0.01;
+
+	for (int i = 1; i < M; i++) {
+		//t[i] = t[i - 1] + hh;
+		x[i] = x[i - 1] + hh;   //0.2, 0.21, 0.22...
+	}
+	*/
+	
+
+	double a_t = 0.0, b_t = 2.0;
+	double a_x = 0.0, b_x = 1.0;
+	double h_t = (b_t - a_t) / (M_NP); //0.1
+	double h_x = (b_x - a_x) / (M_NP); //0.05
+
+	for (int i = 0; i < M_NP; i++) {  // 0, 0.1,...,1.9, 2.0;   t[10] = 1.0
+		t[i] = a_t + i * h_t;
+		printf("t[%d]: %f\n", i, t[i]);
+		
+	}
+	for (int i = 0; i < M_NP; i ++) {  // 0, 0.05, ...0.95, 1.0;  x[4] = 0.2
+		x[i] = a_x + i * h_x;
+		printf("x[%d]: %f\n", i, x[i]);
+	}
+
+
+	partialgradientFunc(myfunc4, x, t, dydx_t, dydt_t, M_NP);
+	partial_2gradient_Func(myfunc4, x, t, dy2dx2, dy2dt2, M_NP);
+
+
+	printf("\nanswer of Q3 a) (t=1, x=0.2) = %f\t%f\n", dydt_t[4][10], dydx_t[4][10]);
+	printf("\nanswer of Q3 b) (t=1, x=0.2) = %f\t%f\n", dy2dt2[4][10], dy2dx2[4][10]);
+
+
+
+
+	system("pause");
+	return 0;
+}
+
+
+
+/*==========================================================================*/
+/*						Function Definitions								*/
+/*==========================================================================*/
+
+
+double func_Q1(double x)
+{
+	double out = 0;
+	double r = 11; //[mm]
+	double V = 2000; //[mm3]
+
+	out = (PI * pow(r, 2) * x) / 2 + (PI * pow(x, 3)) / 6 - V;
+
+
+	return out;
+}
+
+double dfunc_Q1(double x)
+{
+	double out = 0;
+	double r = 11; //[mm]
+
+	out = (PI * pow(r, 2)) / 2 + (PI * pow(x, 2)) / 2;
+
+	return out;
+}
+
+double func_Q2(double x)
+{
+	double out = 0;
+	
+	out = ((pow(x, 2) + sqrt(x)) * cos(x)) / sin(x);
+
+	return out;
+}
+
+
+double func_Q3(double x)
+{
+	double out = 0;
+	double ep = (40 * 0.001) * sqrt(x);
+
+	out = (1 + ep);
+
+	return out;
+}
+
+double myfunc4(double x, double y) 
+{
+	
+	//return sin(PI * x - 6 * PI * y);
+
+	return x * x * y - y ;
+}
