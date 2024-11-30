@@ -1,0 +1,180 @@
+/*------------------------------------------------------------------------------------------\
+@ Numerical Methods by Young-Keun Kim - Handong Global University
+
+Author          : Yuha Park
+Created         : 2024.11.22
+Modified        : 2024.11.28
+Language/ver	: C in MSVS2017
+Course			: Numerical Programming
+
+Description     : TU System of NonLinear
+/------------------------------------------------------------------------------------------*/
+
+
+#include "stdio.h"
+#include "stdlib.h"
+#include <math.h>
+
+#include "../../include/myMatrix_22000287.h"
+#include "../../include/myNP_22000287.h"
+
+
+
+// Defined in main code
+Matrix myFuncEx1(Matrix X);
+Matrix myJacobEx1(Matrix X);
+Matrix myFuncEx2(Matrix X);
+Matrix myJacobEx2(Matrix X);
+
+
+
+void main() {
+
+	/*==========================================================================*/
+	/*					Variables declaration & initialization					*/
+	/*--------------------------------------------------------------------------*/
+	/*   - You can change the variable names									*/
+	/*   - However, you must use the specified file name						*/
+	/*	   : For each assignment, the file name will be notified on HISNET		*/
+	/*==========================================================================*/
+
+	/************      Variables declaration & initialization      ************/
+	double loss = 0;
+	double n = 2;
+	Matrix J = zeros(n, n);
+	Matrix F = zeros(n, 1);
+	Matrix H = zeros(n, 1);
+	Matrix Z = zeros(n, 1);
+
+	// Initial condition
+	double z0[2] = { 2.5, 2 };
+	Z = arr2Mat(z0, n, 1);
+
+
+	/*==========================================================================*/
+	/*					Apply your numerical method algorithm					*/
+	/*==========================================================================*/
+	printf("----------------------------------------------------------------------------------------------\n");
+	printf("			            System of NonLinear	Exercise_1												  \n");
+	printf("----------------------------------------------------------------------------------------------\n\r");
+
+	Z = nonlinearSys(myFuncEx1, myJacobEx1, Z, 0.00001);
+	printMat(Z, "Z");
+
+
+	printf("----------------------------------------------------------------------------------------------\n");
+	printf("			            System of NonLinear	Exercise_2												  \n");
+	printf("----------------------------------------------------------------------------------------------\n\r");
+
+	double loss_Q2 = 0;
+	double n_Q2 = 3;
+	Matrix J_Q2 = zeros(n, n);
+	Matrix F_Q2 = zeros(n, 1);
+	Matrix H_Q2 = zeros(n, 1);
+	Matrix Z_Q2 = zeros(n, 1);
+
+	// Initial condition
+	double z0_Q2[3] = { PI * 25 / 180, 90, 90 };
+	Z_Q2 = arr2Mat(z0_Q2, n_Q2, 1);
+
+	Z_Q2 = DOF_nonlinearSys(myFuncEx2, myJacobEx2, Z_Q2, 0.001);
+	Z_Q2.at[0][0] *= (180 / PI); // rad to deg
+	printMat(Z_Q2, "Z_Q2 ");
+
+	/*==========================================================================*/
+	/*							  Deallocate memory 							*/
+	/*==========================================================================*/
+	freeMat(J);	freeMat(H);	freeMat(F); 	freeMat(Z);
+
+	freeMat(J_Q2);	freeMat(H_Q2);	freeMat(F_Q2); 	freeMat(Z_Q2);
+
+	system("pause");
+}
+
+
+
+
+/*==========================================================================*/
+/*						Function Definitions								*/
+/*==========================================================================*/
+
+Matrix myFuncEx1(Matrix X)
+{
+	int n = X.rows;
+	Matrix F = zeros(n, 1);
+	double x1 = X.at[0][0];
+	double x2 = X.at[1][0];
+
+	F.at[0][0] = x2 - 0.5 * (exp(0.5 * x1) + exp(-0.5 * x1));
+	F.at[1][0] = 9 * (x1) * (x1) + 25 * x2 * x2 - 225;
+
+	return F;
+}
+
+
+Matrix myJacobEx1(Matrix X)
+{
+	int n = X.rows;
+	Matrix J = zeros(n, n);
+	double x1 = X.at[0][0];
+	double x2 = X.at[1][0];
+
+	J.at[0][0] = -0.25 * (exp(0.5 * x1) - exp(-0.5 * x1));
+	J.at[0][1] = 1;
+	J.at[1][0] = 18 * x1;
+	J.at[1][1] = 50 * x2;
+
+
+	return J;
+}
+
+
+Matrix myFuncEx2(Matrix X)
+{
+	int n = X.rows;
+	Matrix F = zeros(n, 1);
+	double th = X.at[0][0];
+	double dx = X.at[1][0];
+	double dy = X.at[2][0];
+
+	int P0x = 0;		int P0y = 100;
+	int P1x = 0;		int P1y = -100;
+	int P0x_new = 50;	double P0y_new = 186.6025;
+	int P1x_new = 150;	double P1y_new = 13.3975;
+
+	F.at[0][0] = cos(th) * P0x - sin(th) * P0y + dx - P0x_new;
+	F.at[1][0] = sin(th) * P0x + cos(th) * P0y + dy - P0y_new;
+	F.at[2][0] = cos(th) * P1x - sin(th) * P1y + dx - P1x_new;
+
+	return F;
+}
+
+
+Matrix myJacobEx2(Matrix X)
+{
+	int n = X.rows;
+	Matrix J = zeros(n, n);
+	double th = X.at[0][0];
+	double dx = X.at[1][0];
+	double dy = X.at[2][0];
+
+	int x0 = 0; 
+	int y0 = 100; 
+	int x1 = 0; 
+	int y1 = -100;
+
+	J.at[0][0] = (-sin(th)) * x0 - (cos(th)) * y0;
+	J.at[0][1] = 1;
+	J.at[0][2] = 0;
+
+	J.at[1][0] = (cos(th)) * x0 - (sin(th)) * y0;
+	J.at[1][1] = 0;
+	J.at[1][2] = 1;
+
+	J.at[2][0] = (-sin(th)) * x1 - (cos(th)) * y1;
+	J.at[2][1] = 1;
+	J.at[2][2] = 0;
+
+	return J;
+}
+
