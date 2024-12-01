@@ -1,5 +1,221 @@
 `#include "myMatrix_22000287.h"`
 
+
+
+## arr2Mat()
+
+// Create a Matrix from 1D-array
+if arr2Mat(1Darray, rows = 2, cols = 2)
+	[data1, data2, data3, data4] (4*1) -> [data1, data2; data3, data4] (2*2)
+
+```c
+Matrix	arr2Mat(double* _1Darray, int _rows, int _cols);
+```
+
+#### **Parameters**
+
+- **_1Darray**:
+  1D array that want to change 
+
+- **_rows**:
+  rows that want to make.
+
+- **_cols**:
+  cols that want to make.
+
+#### Example code
+```c
+double T[] = { 30, 40, 50, 60, 70, 80 };
+double P[] = { 1.05, 1.07, 1.09, 1.14, 1.17, 1.21 };
+int m_Q1 = 6;	// length of dataset
+
+Matrix matT = arr2Mat(T, m_Q1, 1);
+Matrix matP = arr2Mat(P, m_Q1, 1);
+```
+
+---
+
+# curvefit
+
+## linearFit_mat()
+
+LinearRegration calculates the coefficients a1 and a0 of the linear
+equation y = a1*x + a0 that best fit n = 1 data points.
+// Calculates coefficients of least squares regression - Line
+
+```c
+Matrix	linearFit_mat(Matrix _X, Matrix _Y);
+```
+
+#### **Parameters**
+
+- **_X**:
+  A vector with the coordinates x of the data points.
+
+- **_Y**:
+  A vector with the coordinates y of the data points.
+
+- Output variable:
+   - a1   The coefficient a1.
+   - a0   The coefficient a0.
+
+#### Example code
+```c
+
+// Initial Conditions
+double T[] = { 30, 40, 50, 60, 70, 80 };
+double P[] = { 1.05, 1.07, 1.09, 1.14, 1.17, 1.21 };
+double Z_Q1[2] = { 0 };
+int orderN = 1;		// nth order
+int m_Q1 = 6;		// length of dataset
+int mx = 0; int my = 0;
+
+
+// Check Is length(X)~= length(Y) ? Exit: Continue 
+mx = sizeof(T) / sizeof(T[0]);
+my = sizeof(P) / sizeof(P[0]);
+if (my != mx) {
+	printf("[ERROR] X and Y have different length!! \n\r");
+	return 0;
+}
+
+Matrix matT = arr2Mat(T, m_Q1, 1);
+Matrix matP = arr2Mat(P, m_Q1, 1);
+Matrix vecZ = linearFit_mat(matT, matP);
+
+printf("Z_Q1= [a0,  a1] \n\r");
+printMat(vecZ_Q1, "Z_Q1");
+```
+
+---
+
+## polyFit_mat()
+
+LinearRegration calculates the coefficients a0 to an of the polynomial
+equation y = a0 + a1*x + ... + an*(x^n) that best fit n data points.
+// Calculates coefficients of least squares regression - Nth order polynomial
+
+```c
+Matrix	polyFit_mat(Matrix _vecX, Matrix _vecY, int orderN);
+```
+
+#### **Parameters**
+
+- **_vecX**:
+  A vector with the coordinates x of the data points.
+
+- **_vecY**:
+  A vector with the coordinates y of the data points.
+
+- **orderN**:
+  Order of polynomial
+
+- Output variable:
+   - Pcoef = [an ... a4 a3 a2 a1 a0] 
+
+
+#### Example code
+```c
+
+// Initial Conditions
+int m_Q2 = 16;			// data length
+double Stress[] = { 0, 3, 4.5, 5.8, 5.9, 5.8, 6.2, 7.4, 9.6, 15.6, 20.7, 26.7,31.1, 35.6, 39.3, 41.5 };
+double Strain[16] = { 0 };
+for (int k = 0; k < m_Q2; k++)
+	Strain[k] = 0.4 * k;
+
+
+// Is length(X)~= length(Y) ? Exit: Continue 
+mx = sizeof(Stress) / sizeof(Stress[0]);
+my = sizeof(Strain) / sizeof(Strain[0]);
+
+printf("Q2: mx=%d \t my=%d \n\r ", mx, my);
+if (my != mx) {
+	printf("[ERROR] X and Y have different length!! \n\r");
+	return 0;
+}
+
+orderN = 4;	// nth order
+
+Matrix matStrain = arr2Mat(Strain, m_Q2, 1);
+Matrix matStress = arr2Mat(Stress, m_Q2, 1);
+Matrix vecZ_Q2 = polyFit_mat(matStrain, matStress, orderN);
+
+printf("----------------------------------------------------------------\n");
+printf("\t\t Part 1-2: Polynomial  Fitting								\n");
+printf("----------------------------------------------------------------\n");
+printf("Z_Q2= [a0,  a1, .. a4] \n\r");
+printMat(vecZ_Q2, "Z_Q2");
+```
+
+---
+
+## expFit_mat()
+
+LinearRegration calculates the coefficients a1 and a0 of the linear
+equation y = b*exp^(mx) that best fit n data points.
+Linear form: ln(y) = m*x + ln(b)
+// Calculates coefficients of least squares regression - Exponential Curve-fit
+
+```c
+Matrix	expFit_mat(Matrix _X, Matrix _Y);
+```
+
+#### **Parameters**
+
+- **_X**:
+  A vector with the coordinates x of the data points.
+
+- **_Y**:
+  A vector with the coordinates y of the data points.
+
+- Output variable:
+   - c_hat = [c0, c1, ..., cn] 
+
+![image](https://github.com/user-attachments/assets/a51f2ca7-71f0-4bbc-b78f-232bca0ac743)
+
+#### Example code
+```c
+
+int m_Q3 = 15;				// data length
+double Voltage[] = { 9.7, 8.1, 6.6, 5.1, 4.4, 3.7, 2.8, 2.4, 2.0, 1.6, 1.4, 1.1, 0.85, 0.69, 0.6 };
+double Time[15] = { 0 };
+
+double Sum = 0;
+for (int k = 0; k < m_Q3; k++) {
+	Time[k] = 2.0 * (k + 1);
+}
+
+	
+Matrix matTime    = arr2Mat(Time, m_Q3, 1);
+Matrix matVoltage = arr2Mat(Voltage, m_Q3, 1);
+Matrix c_hat_Q3   = expFit_mat(matTime, matVoltage);
+
+printf("----------------------------------------------------------------\n");
+printf("\t\t Part 2: Exponential Fitting								\n");
+printf("----------------------------------------------------------------\n");
+printf("c_hat_Q3 = [c0,  c1, .. c4] \n\r");
+printMat(c_hat_Q3, "c_hat_Q3");
+
+/*==========================================================================*/
+/*					Apply your numerical method algorithm					*/
+/*==========================================================================*/
+
+	
+double c0 = c_hat_Q3.at[0][0];
+double c1 = c_hat_Q3.at[1][0];
+double R  = 5e+06;
+double V0 = exp(c0);
+double C  = -1 / (R * c1);
+
+printf("V0: %.4f, C: %.4fe-06\n", V0, C*1e+06);
+```
+
+---
+
+
+
+---
 # SystemNonLinear
 
 ## nonlinearSys()
