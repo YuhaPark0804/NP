@@ -1,5 +1,6 @@
 ---
 description: Numerical Method example
+
 ---
 
 # Example: API documentation
@@ -155,28 +156,67 @@ double myFunc(const double _x) {
 Solve the 1st-order ODE using Euler's Explicit Method.
 
 ```text
-void odeEU(double func(const double x, const double y), double y[], double t0, double tf, double h, double y0);
+void odeEU(double y[], double odeFunc(const double t, const double y), 
+	const double t0, const double tf, const double h, const double y_init);
 ```
 
 **Parameters**
 
-* **func**: Function **func** is defined.
-* **y\[\]**: Solution of ODE in structure 1D-array form.
+- **y\[\]**: Solution of ODE in structure 1D-array form.
+
+example code
+
+```c
+unsigned int N = ((b - a) / h) + 1;
+double y_EU[200] = { 0 };	//Cannot use sytanx of y_EU[N]={0};	
+```
+
+
+
+* **odeFunc()**: Function **func** is defined.
+
+example code
+
+```c
+// Gradient function for ODE - 1st order 
+double odeFunc_rc(const double t, const double v)
+{
+	// Input:	 y, t
+	// Output:	 dydt 
+
+	// system modeling parameters 
+	double tau = 0.01;
+	double f = 100;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	double dvdt = 0;
+	
+	dvdt = -v/tau + (Vm / tau) * cos(omega * t);
+
+	return dvdt;
+}
+```
+
+
+
 * **t0** is starting point.
 * **tf** is ending point.
 * **h** is length of step.
-* **y0** is initial value of **y\[\]**.
+* **y_init** is initial value of **y\[\]**.
 
 **Example code**
 
-```text
+```c
 double a = 0;
 double b = 0.1;
 double h = 0.001;
-double y_EU[200] = { 0 };
-double v0 = 0;
 
-odeEU(odeFunc_rc, y_EU, a, b, h, v0);
+unsigned int N = ((b - a) / h) + 1;
+double y_EU[200] = { 0 };
+
+double y_init = 0;
+
+odeEU(y_EU, odeFunc_rc, a, b, h, y_init);
 
 double odeFunc_rc(const double t, const double v) {
 	double tau = 1;
@@ -189,6 +229,388 @@ double odeFunc_rc(const double t, const double v) {
 ```
 
 -------------------------------------------------------------------------------------------------------
+
+
+
+### odeRK2\(\)
+
+Solve the 1st-order ODE using Runge-Kutta 2nd order
+
+```c
+void odeRK2(double y[], double odeFunc(const double t, const double y), 
+	const double t0, const double tf, const double h, const double y_init);
+```
+
+**Parameters**
+
+- **y\[\]**: Solution of ODE in structure 1D-array form.
+
+example code
+
+```c
+unsigned int N = ((b - a) / h) + 1;
+double y_RK2[200] = { 0 };	//Cannot use sytanx of y_EU[N]={0};	
+```
+
+
+
+* **odeFunc()**: Function **func** is defined.
+
+example code
+
+```c
+// Gradient function for ODE - 1st order 
+double odeFunc_rc(const double t, const double v)
+{
+	// Input:	 y, t
+	// Output:	 dydt 
+
+	// system modeling parameters 
+	double tau = 0.01;
+	double f = 100;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	double dvdt = 0;
+	
+	dvdt = -v/tau + (Vm / tau) * cos(omega * t);
+
+	return dvdt;
+}
+```
+
+
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y_init** is initial value of **y\[\]**.
+
+**Example code**
+
+```c
+double a = 0;
+double b = 0.1;
+double h = 0.001;
+
+unsigned int N = ((b - a) / h) + 1;
+double y_EU[200] = { 0 };
+
+double y_init = 0;
+
+//  Runge-Kutta 2nd order
+odeRK2(y_RK2, odeFunc_rc, a, b, h, y_init);
+
+double odeFunc_rc(const double t, const double v) {
+	double tau = 1;
+	double T = 1 / tau;
+	double f = 10;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	return  -T * v + T * Vm * cos(omega * t);
+}
+```
+
+-------------------------------------------------------------------------------------------------------
+
+## 
+
+
+
+### odeRK3\(\)
+
+Solve the 1st-order ODE using Runge-Kutta 3nd order
+
+```c
+void odeRK3(double y[], double odeFunc(const double t, const double y), 
+	const double t0, const double tf, const double h, const double y0);
+```
+
+**Parameters**
+
+- **y\[\]**: Solution of ODE in structure 1D-array form.
+
+example code
+
+```c
+unsigned int N = ((b - a) / h) + 1;
+double y_RK3[200] = { 0 };	//Cannot use sytanx of y_EU[N]={0};	
+```
+
+
+
+* **odeFunc()**: Function **func** is defined.
+
+example code
+
+```c
+// Gradient function for ODE - 1st order 
+double odeFunc_rc(const double t, const double v)
+{
+	// Input:	 y, t
+	// Output:	 dydt 
+
+	// system modeling parameters 
+	double tau = 0.01;
+	double f = 100;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	double dvdt = 0;
+	
+	dvdt = -v/tau + (Vm / tau) * cos(omega * t);
+
+	return dvdt;
+}
+```
+
+
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y0** is initial value of **y\[\]**.
+
+**Example code**
+
+```c
+double a = 0;
+double b = 0.1;
+double h = 0.001;
+
+unsigned int N = ((b - a) / h) + 1;
+double y_EU[200] = { 0 };
+
+double y_init = 0;
+
+//  Runge-Kutta 3rd order
+odeRK3(y_RK3, odeFunc_rc, a, b, h, y_init);
+
+printf("----------------------------------------------------------------\n");
+printf("			       1st ODE - IVP  Results						\n");
+printf("----------------------------------------------------------------\n");
+
+printf("i\t t\t\t yEU\t\t yRK2\t\t yRK3\t \n\n");
+for (int i = 0; i < N; i++)
+	printf("%d\t %0.5f\t %.5f\t %.5f\t %.5f\t \n", i, a + i * h, y_EU[i], y_RK2[i], y_RK3[i]);
+printf("\n");
+
+double odeFunc_rc(const double t, const double v) {
+	double tau = 1;
+	double T = 1 / tau;
+	double f = 10;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	return  -T * v + T * Vm * cos(omega * t);
+}
+```
+
+-------------------------------------------------------------------------------------------------------
+
+## 
+
+
+
+### sys2RK2\(\)
+
+Solve the 2st-order ODE using Runge-Kutta 2nd-order
+
+```c
+void sys2RK2(double y[], double v[], void odeFuncSys(double dYdt[], const double t, const double Y[]), 
+	const double t0, const double tf, const double h, const double y_init, const double v_init);
+```
+
+**Parameters**
+
+- **y\[\]**: Solution of ODE in structure 1D-array form. (y' = z(t))
+- **v\[\]**: Solution of ODE in structure 1D-array form. (y'' = z')
+
+* **odeFuncSys()**: Function **func** is defined.
+
+example code
+
+```c
+// Gradient function for ODE - 2nd order 
+void odeFunc_mck(double dYdt[], const double t, const double Y[])
+{
+	// Input:	 vecY = [y; v], t
+	// Output:	 dYdt = [dydt; dvdt]
+
+	// system modeling parameters 
+	double	m		= 1.0;					//[kg]
+	double	k		= 6.9;					//[N/m]
+	double	c		= 7.0;				    //[N/m/s]
+	double	A		= 2.0;					//[N]
+	double	f		= 5.0;					//[Hz]
+	double	omega	= 2.0 * PI * f;
+	double	Fin		= A * cos(omega * t);
+
+	// output
+	dYdt[0] = Y[1];  //dydt = v
+	dYdt[1] = (1.0 / m) * (-k * Y[0] - c * Y[1] + Fin);
+}
+```
+
+
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y_init** is initial value of **y\[\]**.
+* **z_init** is initial value of **z\[\]**.
+
+**Example code**
+
+```c
+//Parameter Definitions
+double t0 = 0;
+double tf = 1;
+h = 0.01;
+N = (tf - t0) / h + 1;
+
+// Runge-Kutta 2nd order
+double Y_2RK2[200] = { 0 };
+double V_2RK2[200] = { 0 };
+
+// Initial values
+double y_initQ2 = 0;
+double v_initQ2 = 0.2;
+
+//  Runge-Kutta 2nd order
+sys2RK2(Y_2RK2, V_2RK2, odeFunc_mck, t0, tf, h, y_initQ2, v_initQ2);
+
+// Gradient function for ODE - 2nd order 
+void odeFunc_mck(double dYdt[], const double t, const double Y[])
+{
+	// Input:	 vecY = [y; v], t
+	// Output:	 dYdt = [dydt; dvdt]
+
+	// system modeling parameters 
+	double	m		= 1.0;					//[kg]
+	double	k		= 6.9;					//[N/m]
+	double	c		= 7.0;				    //[N/m/s]
+	double	A		= 2.0;					//[N]
+	double	f		= 5.0;					//[Hz]
+	double	omega	= 2.0 * PI * f;
+	double	Fin		= A * cos(omega * t);
+
+	// output
+	dYdt[0] = Y[1];  //dydt = v
+	dYdt[1] = (1.0 / m) * (-k * Y[0] - c * Y[1] + Fin);
+}
+```
+
+-------------------------------------------------------------------------------------------------------
+
+## 
+
+
+
+
+
+### sys2RK4\(\)
+
+Solve the 2st-order ODE using Runge-Kutta 4nd-order
+
+```c
+void sys2RK4(double y[], double v[], void odeFuncSys(double dYdt[], const double t, const double Y[]), 
+	const double t0, const double tf, const double h, const double y_init, const double v_init);
+```
+
+**Parameters**
+
+- **y\[\]**: Solution of ODE in structure 1D-array form. (y' = z(t))
+- **v\[\]**: Solution of ODE in structure 1D-array form. (y'' = z')
+
+* **odeFuncSys()**: Function **func** is defined.
+
+example code
+
+```c
+// Gradient function for ODE - 2nd order 
+void odeFunc_mck(double dYdt[], const double t, const double Y[])
+{
+	// Input:	 vecY = [y; v], t
+	// Output:	 dYdt = [dydt; dvdt]
+
+	// system modeling parameters 
+	double	m		= 1.0;					//[kg]
+	double	k		= 6.9;					//[N/m]
+	double	c		= 7.0;				    //[N/m/s]
+	double	A		= 2.0;					//[N]
+	double	f		= 5.0;					//[Hz]
+	double	omega	= 2.0 * PI * f;
+	double	Fin		= A * cos(omega * t);
+
+	// output
+	dYdt[0] = Y[1];  //dydt = v
+	dYdt[1] = (1.0 / m) * (-k * Y[0] - c * Y[1] + Fin);
+}
+```
+
+
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y_init** is initial value of **y\[\]**.
+* **z_init** is initial value of **z\[\]**.
+
+**Example code**
+
+```c
+//Parameter Definitions
+double t0 = 0;
+double tf = 1;
+h = 0.01;
+N = (tf - t0) / h + 1;
+
+// Runge-Kutta 4th order
+double Y_2RK4[200] = { 0 };
+double V_2RK4[200] = { 0 };
+
+// Initial values
+double y_initQ2 = 0;
+double v_initQ2 = 0.2;
+
+// Runge-Kutta 4th order
+sys2RK4(Y_2RK4, V_2RK4, odeFunc_mck, t0, tf, h, y_initQ2, v_initQ2);
+
+printf("----------------------------------------------------------------\n");
+printf("			       2nd order ODE - IVP  Results					\n");
+printf("----------------------------------------------------------------\n");
+
+printf("i\t t\t\t Y_2RK2\t\t V_2RK2\t\t Y_2RK4\t\t V_2RK4\t\t \n\n");
+for (int i = 0; i < N; i++)
+	printf("%d\t %0.5f\t %.5f\t %.5f\t %.5f\t %.5f\t\n", i, a + i * h, Y_2RK2[i], V_2RK2[i], Y_2RK4[i], V_2RK4[i]);
+printf("\n");
+
+
+// Gradient function for ODE - 2nd order 
+void odeFunc_mck(double dYdt[], const double t, const double Y[])
+{
+	// Input:	 vecY = [y; v], t
+	// Output:	 dYdt = [dydt; dvdt]
+
+	// system modeling parameters 
+	double	m		= 1.0;					//[kg]
+	double	k		= 6.9;					//[N/m]
+	double	c		= 7.0;				    //[N/m/s]
+	double	A		= 2.0;					//[N]
+	double	f		= 5.0;					//[Hz]
+	double	omega	= 2.0 * PI * f;
+	double	Fin		= A * cos(omega * t);
+
+	// output
+	dYdt[0] = Y[1];  //dydt = v
+	dYdt[1] = (1.0 / m) * (-k * Y[0] - c * Y[1] + Fin);
+}
+```
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 ## Class or Header name
 
