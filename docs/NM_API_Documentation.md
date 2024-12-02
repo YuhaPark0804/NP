@@ -1,5 +1,211 @@
 `#include "myMatrix_22000287.h"`
 
+## Eigen Value
+
+### MatrixNorm\(\)
+
+Solve to find the norm  of Matrix.
+
+Matrix A = [a0, a1;...];
+
+||n|| = sqrt(a0^2 + a1^2 + ... + an^2)
+
+```c
+double MatrixNorm(Matrix& A);
+```
+
+**Parameters**
+
+- **A**: Matrix that wants to find the norm.
+
+
+
+**Example code**
+
+```c
+Matrix c = createMat(n, 1);
+MatrixNorm(c);
+```
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+### QRdecomp\(\)
+
+To solve Eigenvalue & Eigenvector, A has to be decomposition (Matrix A = QR) 
+
+Using HouseHold Matrix
+
+Transform A -> U, while preserving eigenvalues. (use similar matrix)
+
+```c
+void QRdecomp(Matrix& A, Matrix& Q, Matrix& R);
+```
+
+**Parameters**
+
+- **A**: Matrix that wants to decompose to A=QR. A: (n*n)
+- **Q**: Matrix that orthonormal. (inv(Q) = transpose(Q)) Q: (n*n)
+- **R**: Matrix that Upper triangular. R (n*n)
+
+
+
+**Example code**
+
+```c
+Matrix U = copyMat(A);
+Matrix Q = eye(m, n);
+Matrix R = copyMat(A);
+QRdecomp(U, Q, R); // update Q, R
+```
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+### eigval\(\)
+
+To solve Eigenvalue. (Estimating Eigenvalues using QR factorization and Iteration)
+
+Find a similar matrix U that preserves the eigenvalues.
+
+```c
+Matrix eigval(Matrix& A);
+```
+
+**Parameters**
+
+- **A**: Matrix that wants to find eigenvalue.
+
+**Output**
+
+- **lamda**: (n*1) matrix
+
+
+
+**Example code**
+
+```c
+Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+Matrix eigVals_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+
+eigVals_Q1 = eigval(matA_Q1);
+
+printf("\n[Eigen value]\n\n");
+printMat(eigVals_Q1,"eigVals_Q1");
+```
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+### eigvec\(\)
+
+To solve Eigen vector.
+
+```c
+Matrix eigvec(Matrix A);
+```
+
+**Parameters**
+
+- **A**: Matrix that wants to find eigen vector. (n*n) Matrix
+
+
+
+**Output**
+
+- **V**: (n*n) Matrix
+
+
+
+**Example code**
+
+```c
+Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+Matrix eigVals_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+
+eigVecs_Q1 = eigvec(matA_Q1);
+
+printf("\n[Eigen vector]\n\n");
+printMat(eigVecs_Q1,"eigVecs_Q1");
+```
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+### eig\(\)
+
+To solve Eigen vector & Eigen value.
+
+```c
+void eig(Matrix A, Matrix& V, Matrix& D);
+```
+
+**Parameters**
+
+- **A**: Matrix that wants to find the eigenvector and eigenvalue.
+- **V**: Matrix that wants to find eigenvector.
+- **D**: Matrix that wants to find eigenvalue.
+
+
+
+**No Output, Just update**
+
+- **V**: eigenvector. (n*n) Matrix
+- **D**: eigenvalue. (n*n) Matrix; eye Matrix but pivot is eigenvalue. 
+
+
+
+**Example code**
+
+```c
+Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+Matrix matD_Q1 = eye(matA_Q1.rows, matA_Q1.cols);
+Matrix matV_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+
+eig(matA_Q1, matV_Q1, matD_Q1);
+
+printf("\n[Eigen value]\n\n");
+printMat(matD_Q1, "matD_Q1");
+
+printf("\n[Eigen vector]\n\n");
+printMat(matV_Q1, "matV_Q1");
+```
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## arr2Mat()
