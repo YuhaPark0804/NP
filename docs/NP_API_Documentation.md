@@ -293,7 +293,7 @@ double b = 0.1;
 double h = 0.001;
 
 unsigned int N = ((b - a) / h) + 1;
-double y_EU[200] = { 0 };
+double y_RK2[200] = { 0 };
 
 double y_init = 0;
 
@@ -377,7 +377,7 @@ double b = 0.1;
 double h = 0.001;
 
 unsigned int N = ((b - a) / h) + 1;
-double y_EU[200] = { 0 };
+double y_RK3[200] = { 0 };
 
 double y_init = 0;
 
