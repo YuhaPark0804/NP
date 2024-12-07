@@ -230,6 +230,7 @@ Matrix	arr2Mat(double* _1Darray, int _rows, int _cols);
   cols that want to make.
 
 #### Example code
+
 ```c
 double T[] = { 30, 40, 50, 60, 70, 80 };
 double P[] = { 1.05, 1.07, 1.09, 1.14, 1.17, 1.21 };
@@ -262,12 +263,12 @@ Matrix	linearFit_mat(Matrix _X, Matrix _Y);
   A vector with the coordinates y of the data points.
 
 - Output variable:
-   - a1   The coefficient a1.
-   - a0   The coefficient a0.
+  - a1   The coefficient a1.
+  - a0   The coefficient a0.
 
 #### Example code
-```c
 
+```c
 // Initial Conditions
 double T[] = { 30, 40, 50, 60, 70, 80 };
 double P[] = { 1.05, 1.07, 1.09, 1.14, 1.17, 1.21 };
@@ -317,12 +318,12 @@ Matrix	polyFit_mat(Matrix _vecX, Matrix _vecY, int orderN);
   Order of polynomial
 
 - Output variable:
-   - Pcoef = [an ... a4 a3 a2 a1 a0] 
+  - Pcoef = [an ... a4 a3 a2 a1 a0] 
 
 
 #### Example code
-```c
 
+```c
 // Initial Conditions
 int m_Q2 = 16;			// data length
 double Stress[] = { 0, 3, 4.5, 5.8, 5.9, 5.8, 6.2, 7.4, 9.6, 15.6, 20.7, 26.7,31.1, 35.6, 39.3, 41.5 };
@@ -376,13 +377,13 @@ Matrix	expFit_mat(Matrix _X, Matrix _Y);
   A vector with the coordinates y of the data points.
 
 - Output variable:
-   - c_hat = [c0, c1, ..., cn] 
+  - c_hat = [c0, c1, ..., cn] 
 
 ![image](https://github.com/user-attachments/assets/a51f2ca7-71f0-4bbc-b78f-232bca0ac743)
 
 #### Example code
-```c
 
+```c
 int m_Q3 = 15;				// data length
 double Voltage[] = { 9.7, 8.1, 6.6, 5.1, 4.4, 3.7, 2.8, 2.4, 2.0, 1.6, 1.4, 1.1, 0.85, 0.69, 0.6 };
 double Time[15] = { 0 };
@@ -422,6 +423,7 @@ printf("V0: %.4f, C: %.4fe-06\n", V0, C*1e+06);
 
 
 ---
+
 # SystemNonLinear
 
 ## nonlinearSys()
@@ -437,18 +439,18 @@ Matrix nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix _Z0
 - **Funcs(Matrix _Z)**:
   non-linear equation that want to solve. This matrix is (n*1)
   ex)
-  
+
   ```c
   Matrix myFuncEx1(Matrix X){
-	int n = X.rows;
-	Matrix F = zeros(n, 1);
-	double x1 = X.at[0][0];
-	double x2 = X.at[1][0];
-
-	F.at[0][0] = x2 - 0.5 * (exp(0.5 * x1) + exp(-0.5 * x1));
-	F.at[1][0] = 9 * (x1) * (x1) + 25 * x2 * x2 - 225;
-
-	return F;}
+  int n = X.rows;
+  Matrix F = zeros(n, 1);
+  double x1 = X.at[0][0];
+  double x2 = X.at[1][0];
+  
+  F.at[0][0] = x2 - 0.5 * (exp(0.5 * x1) + exp(-0.5 * x1));
+  F.at[1][0] = 9 * (x1) * (x1) + 25 * x2 * x2 - 225;
+  
+  return F;}
   ```
 
 
@@ -456,22 +458,24 @@ Matrix nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix _Z0
   Jacobian matrix (= F'(X)). It is differential value of the matrix Funcs(Matrix _Z).
   This matrix is square (n*n)
   ex)
+
   ```c
   Matrix myJacobEx1(Matrix X){
-	int n = X.rows;
-	Matrix J = zeros(n, n);
-	double x1 = X.at[0][0];
-	double x2 = X.at[1][0];
-
-	J.at[0][0] = -0.25 * (exp(0.5 * x1) - exp(-0.5 * x1));
-	J.at[0][1] = 1;
-	J.at[1][0] = 18 * x1;
-	J.at[1][1] = 50 * x2;
+  int n = X.rows;
+  Matrix J = zeros(n, n);
+  double x1 = X.at[0][0];
+  double x2 = X.at[1][0];
+  
+  J.at[0][0] = -0.25 * (exp(0.5 * x1) - exp(-0.5 * x1));
+  J.at[0][1] = 1;
+  J.at[1][0] = 18 * x1;
+  J.at[1][1] = 50 * x2;
+  ```
 
 
 	return J;}
-  ```
 
+  ```
 - **_Z0**:  Matrix **_Z0** is Initial condition of Z. It is (n*1) matrix.
   ```c
   Matrix Z = zeros(n, 1);
@@ -484,6 +488,7 @@ Matrix nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix _Z0
 - **tol**:  Tolerance value.
 
 #### Example code
+
 ```c
 double loss = 0;
 double n = 2;
@@ -499,6 +504,7 @@ Z = arr2Mat(z0, n, 1);
 Z = nonlinearSys(myFuncEx1, myJacobEx1, Z, 0.00001);
 printMat(Z, "Z");
 ```
+
 ---
 
 ## DOF_nonlinearSys()
@@ -518,25 +524,25 @@ Matrix DOF_nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix
 - **Funcs(Matrix _Z)**:
   non-linear equation that want to solve. This matrix is (n*1)
   ex)
-  
+
   ```c
   Matrix myFuncEx2(Matrix X){
-	int n = X.rows;
-	Matrix F = zeros(n, 1);
-	double th = X.at[0][0];
-	double dx = X.at[1][0];
-	double dy = X.at[2][0];
-
-	int P0x = 0;		int P0y = 100;
-	int P1x = 0;		int P1y = -100;
-	int P0x_new = 50;	double P0y_new = 186.6025;
-	int P1x_new = 150;	double P1y_new = 13.3975;
-
-	F.at[0][0] = cos(th) * P0x - sin(th) * P0y + dx - P0x_new;
-	F.at[1][0] = sin(th) * P0x + cos(th) * P0y + dy - P0y_new;
-	F.at[2][0] = cos(th) * P1x - sin(th) * P1y + dx - P1x_new;
-
-	return F;}
+  int n = X.rows;
+  Matrix F = zeros(n, 1);
+  double th = X.at[0][0];
+  double dx = X.at[1][0];
+  double dy = X.at[2][0];
+  
+  int P0x = 0;		int P0y = 100;
+  int P1x = 0;		int P1y = -100;
+  int P0x_new = 50;	double P0y_new = 186.6025;
+  int P1x_new = 150;	double P1y_new = 13.3975;
+  
+  F.at[0][0] = cos(th) * P0x - sin(th) * P0y + dx - P0x_new;
+  F.at[1][0] = sin(th) * P0x + cos(th) * P0y + dy - P0y_new;
+  F.at[2][0] = cos(th) * P1x - sin(th) * P1y + dx - P1x_new;
+  
+  return F;}
   ```
 
 
@@ -544,38 +550,40 @@ Matrix DOF_nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix
   Jacobian matrix (= F'(X)). It is differential value of the matrix Funcs(Matrix _Z).
   This matrix is square (n*n)
   ex)
+
   ```c
   Matrix myJacobEx2(Matrix X){
-	int n = X.rows;
-	Matrix J = zeros(n, n);
-	double th = X.at[0][0];
-	double dx = X.at[1][0];
-	double dy = X.at[2][0];
-
-	int x0 = 0; 
-	int y0 = 100; 
-	int x1 = 0; 
-	int y1 = -100;
-
-	J.at[0][0] = (-sin(th)) * x0 - (cos(th)) * y0;
-	J.at[0][1] = 1;
-	J.at[0][2] = 0;
-
-	J.at[1][0] = (cos(th)) * x0 - (sin(th)) * y0;
-	J.at[1][1] = 0;
-	J.at[1][2] = 1;
-
-	J.at[2][0] = (-sin(th)) * x1 - (cos(th)) * y1;
-	J.at[2][1] = 1;
-	J.at[2][2] = 0;
-
-	return J;}
+  int n = X.rows;
+  Matrix J = zeros(n, n);
+  double th = X.at[0][0];
+  double dx = X.at[1][0];
+  double dy = X.at[2][0];
+  
+  int x0 = 0; 
+  int y0 = 100; 
+  int x1 = 0; 
+  int y1 = -100;
+  
+  J.at[0][0] = (-sin(th)) * x0 - (cos(th)) * y0;
+  J.at[0][1] = 1;
+  J.at[0][2] = 0;
+  
+  J.at[1][0] = (cos(th)) * x0 - (sin(th)) * y0;
+  J.at[1][1] = 0;
+  J.at[1][2] = 1;
+  
+  J.at[2][0] = (-sin(th)) * x1 - (cos(th)) * y1;
+  J.at[2][1] = 1;
+  J.at[2][2] = 0;
+  
+  return J;}
   ```
 
 - **_Z0**:  Matrix **_Z0** is Initial condition of Z. It is (n*1) matrix.
+
   ```c
   Matrix Z_Q2 = zeros(n, 1);
-
+  
   // Initial condition
   double z0_Q2[3] = { PI * 25 / 180, 90, 90 };
   Z_Q2 = arr2Mat(z0_Q2, n_Q2, 1);
@@ -584,6 +592,7 @@ Matrix DOF_nonlinearSys(Matrix Funcs(Matrix _Z), Matrix Jacob(Matrix _Z), Matrix
 - **tol**:  Tolerance value.
 
 #### Example code
+
 ```c
 double loss_Q2 = 0;
 double n_Q2 = 3;
@@ -600,7 +609,12 @@ Z_Q2 = DOF_nonlinearSys(myFuncEx2, myJacobEx2, Z_Q2, 0.001);
 Z_Q2.at[0][0] *= (180 / PI); // rad to deg
 printMat(Z_Q2, "Z_Q2 ");
 ```
+
 ---
+
+
+
+
 
 
 ---
@@ -613,18 +627,405 @@ printMat(Z_Q2, "Z_Q2 ");
 solves for vector **x** from  Ax=b,  a linear system problem  
 
 ```c
-void	gaussElim(Matrix _A, Matrix _B, Matrix* _U, Matrix* _B_out);
+void gaussElim(Matrix A, Matrix b, Matrix& U, Matrix& d);
 ```
 
 #### **Parameters**
 
 - **A**:  Matrix **A** in structure Matrix form.  Should be (nxn) square.
 
-- **B**:  vector  **b** in structure Matrix form.  Should be (nx1) 
+- **b**:  vector  **b** in structure Matrix form.  Should be (nx1) 
+
+- **U**:  Matrix  **U** in structure Matrix form. Upper triangular matrix. Should be (nxn) 
+
+- **d**:  vector  **d** in structure Matrix form.  Should be (nx1) 
+
+  **Example code**
+
+  ```c
+  Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+  Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb");
+  
+  Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+  Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  
+  printMat(matA_Q1, "matA_Q1");
+  printMat(vecb_Q1, "vecb_Q1");
+  
+  gaussElim(matA_Q1, vecb_Q1, matU_Q1, matd_Q1); //use this
+  backsub(matU_Q1, matd_Q1, matx_Q1);
+  
+  printMat(matU_Q1, "matU_Q1");
+  printMat(matd_Q1, "matd_Q1");
+  printMat(matx_Q1, "matx_Q1");
+  ```
 
   
 
   
+
+  ---
+
+  ## backsub()
+
+  solves for vector **x** from  Ux=y,  a linear system problem . 
+
+  ```c
+  void backsub(Matrix U, Matrix& y, Matrix& x);
+  ```
+
+  #### **Parameters**
+
+  - **U**:  Matrix **U** in structure Matrix form.  Should be (nxn) square.
+
+  - **y**:  vector  **y** in structure Matrix form.  Should be (nx1) 
+
+  - **x**:  vector  **x** in structure Matrix form. Should be (nx1) 
+
+    
+
+    **Example code**
+
+    ```c
+    Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+    Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb");
+    
+    Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+    Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+    Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+    
+    printMat(matA_Q1, "matA_Q1");
+    printMat(vecb_Q1, "vecb_Q1");
+    
+    gaussElim(matA_Q1, vecb_Q1, matU_Q1, matd_Q1);
+    backsub(matU_Q1, matd_Q1, matx_Q1);
+    
+    printMat(matU_Q1, "matU_Q1");
+    printMat(matd_Q1, "matd_Q1");
+    printMat(matx_Q1, "matx_Q1");
+    ```
+
+    
+
+
+
+
+
+---
+
+## fwdsub()
+
+solves for vector **y** from  Ly=b,  a linear system problem . 
+
+```c
+void fwdsub(Matrix& L, Matrix& b, Matrix& y);
+```
+
+#### **Parameters**
+
+- **L**:  Matrix **L** in structure Matrix form.  Should be (nxn) square.
+
+- **y**:  vector  **y** in structure Matrix form.  Should be (nx1) 
+
+- **b**:  vector  **b** in structure Matrix form. Should be (nx1) 
+
+  
+
+  **Example code**
+
+  ```c
+  void solveLU(Matrix& L, Matrix& U, Matrix& P, Matrix& b, Matrix& x) {  
+  
+  	//PAx=Pb
+  	//LUx=Pb
+  	//Ly=b*
+  	//Ux=y
+  	
+  	Matrix y = createMat(x.rows, x.cols);
+  	Matrix Pb = multMat(P, b);
+  
+  	fwdsub(L, Pb, y);  //Ly=b*
+  	backsub(U, y, x); //Ux=y
+  		
+  	freeMat(y);
+  	freeMat(Pb);
+  }
+  ```
+
+  
+
+
+
+
+
+
+
+---
+
+## gaussElim_pivot()
+
+solves LU decomposition of A with pivoting in terms of PA=LU
+
+```c
+void gaussElim_pivot(Matrix A, Matrix b, Matrix& U, Matrix& P, Matrix& L, Matrix& d);
+```
+
+#### **Parameters**
+
+- **A**:  Matrix **A** in structure Matrix form.  Should be (nxn) square.
+
+- **b**:  vector  **b** in structure Matrix form.  Should be (nx1) 
+
+- **U**:  Matrix  **U** in structure Matrix form. CopyMatrix of A. Should be (nxn) 
+
+- **P**:  Matrix  **P** in structure Matrix form. eye matrix. Should be (nxn) 
+
+- **L**:  Matrix  **L** in structure Matrix form. eye matrix. Should be (nxn) 
+
+- **d**:  vector  **d** in structure Matrix form.  CopyMatrix of b. Should be (nx1) 
+
+  
+
+  **Example code**
+
+  ```c
+  // Option 1:  Read from datafile
+  Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+  Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb");
+  
+  // Option 2:  Create a zero matrix with specific size
+  Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+  Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  
+  Matrix matP_test = eye(test_matA.rows, test_matA.cols); 
+  Matrix matL_test = createMat(test_matA.rows, test_matA.cols); 
+  
+  printMat(matA_Q1, "matA_Q1");
+  printMat(vecb_Q1, "vecb_Q1");
+  
+  //-----------------//
+  gaussElim_pivot(matA_Q1, vecb_Q1, matU_Q1, matP_test, matL_test, matd_Q1);
+  //-----------------//
+  backsub(matU_Q1, matd_Q1, matx_Q1);
+  
+  printMat(matU_Q1, "matU_Q1");
+  printMat(matd_Q1, "matd_Q1");
+  printMat(matx_Q1, "matx_Q1");
+  ```
+
+
+
+
+
+
+
+---
+
+## LUdecomp()
+
+solves LU decomposition of A with pivoting in terms of PA=LU.
+
+pivoting: divided by max term 
+
+```c
+void LUdecomp(Matrix A, Matrix& L, Matrix& U, Matrix& P);
+```
+
+#### **Parameters**
+
+- **A**:  Matrix **A** in structure Matrix form.  Should be (nxn) square.
+
+- **L**:  Matrix  **L** in structure Matrix form. eye matrix. Should be (nxn) 
+
+- **U**:  Matrix  **U** in structure Matrix form. CopyMatrix of A. Should be (nxn) 
+
+- **P**:  Matrix  **P** in structure Matrix form. eye matrix. Should be (nxn) 
+
+  
+
+  **Example code**
+
+  ```c
+  // Option 1:  Read from datafile
+  Matrix test_matA = txt2Mat(path, "test_matA"); 
+  
+  // Option 2:  Create a zero matrix with specific size
+  Matrix matU_test = createMat(test_matA.rows, test_matA.cols);
+  Matrix matP_test = eye(test_matA.rows, test_matA.cols); 
+  Matrix matL_test = createMat(test_matA.rows, test_matA.cols); 
+  Matrix matx_test = createMat(vecb_Q1.rows, vecb_Q1.cols); 
+  Matrix maty_test = createMat(vecb_Q1.rows, vecb_Q1.cols); 
+  
+  
+  printMat(test_matA, "test_matA"); 
+  
+  //-----------------//
+  LUdecomp(test_matA, matL_test, matU_test, matP_test);
+  //-----------------//
+  
+  printMat(matU_test, "matU_test");
+  printMat(matL_test, "matL_test");
+  printMat(matP_test, "matP_test");
+  ```
+
+
+
+**Example code 2**
+
+```c
+// Option 1:  Read from datafile
+Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb"); 
+
+// Option 2:  Create a zero matrix with specific size
+Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+Matrix matL_Q1 = zeros(matA_Q1.rows, matA_Q1.cols); 
+Matrix matP_Q1 = eye(matA_Q1.rows, matA_Q1.cols);
+Matrix matAinv_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+
+/// Q1
+printMat(matA_Q1, "matA_Q1");
+printMat(vecb_Q1, "vecb_Q1");
+
+LUdecomp(matA_Q1, matL_Q1, matU_Q1, matP_Q1);
+solveLU(matL_Q1, matU_Q1, matP_Q1, vecb_Q1, matx_Q1);
+
+//invMat(matA_Q1, matAinv_Q1);            //Find inverse mat A
+//matx_Q1 = multMat(matAinv_Q1, vecb_Q1); //x= (A^-1) * b
+
+printMat(matU_Q1, "matU_Q1");
+printMat(matx_Q1, "matx_Q1");
+```
+
+
+
+---
+
+
+
+
+
+
+
+---
+
+## solveLU()
+
+After LU decomposition of A, 
+
+do forward sub + backward sub.
+
+```c
+void solveLU(Matrix& L, Matrix& U, Matrix& P, Matrix& b, Matrix& x);
+```
+
+#### **Parameters**
+
+- **L**:  Matrix  **L** in structure Matrix form. Should be (nxn) 
+- **U**:  Matrix  **U** in structure Matrix form. Should be (nxn) 
+- **P**:  Matrix  **P** in structure Matrix form. eye matrix. Should be (nxn) 
+
+- **b**:  vector  **b** in structure Matrix form.  Should be (nx1) 
+
+- **x**:  vector  **x** in structure Matrix form. Should be (nx1) 
+
+  
+
+  **Example code**
+
+  ```c
+  // Option 1:  Read from datafile
+  Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+  Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb"); 
+  
+  // Option 2:  Create a zero matrix with specific size
+  Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+  Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+  Matrix matL_Q1 = zeros(matA_Q1.rows, matA_Q1.cols); 
+  Matrix matP_Q1 = eye(matA_Q1.rows, matA_Q1.cols);
+  Matrix matAinv_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+  
+  /// Q1
+  printMat(matA_Q1, "matA_Q1");
+  printMat(vecb_Q1, "vecb_Q1");
+  
+  LUdecomp(matA_Q1, matL_Q1, matU_Q1, matP_Q1);
+  solveLU(matL_Q1, matU_Q1, matP_Q1, vecb_Q1, matx_Q1);//////
+  
+  //invMat(matA_Q1, matAinv_Q1);            //Find inverse mat A
+  //matx_Q1 = multMat(matAinv_Q1, vecb_Q1); //x= (A^-1) * b
+  
+  printMat(matU_Q1, "matU_Q1");
+  printMat(matx_Q1, "matx_Q1");
+  ```
+
+
+
+
+
+
+
+
+
+---
+
+## invMat()
+
+Make inverse Matrix.
+
+```c
+double invMat(Matrix A, Matrix& Ainv);
+```
+
+#### **Parameters**
+
+- **A**:  Matrix  **A** in structure Matrix form. Should be (nxn) 
+
+- **Ainv**:  Matrix  **Ainv** in structure Matrix form. Should be (nxn) 
+
+  
+
+**Example code**
+
+```c
+// Option 1:  Read from datafile
+Matrix matA_Q1 = txt2Mat(path, "prob1_matA");
+Matrix vecb_Q1 = txt2Mat(path, "prob1_vecb"); 
+
+// Option 2:  Create a zero matrix with specific size
+Matrix matU_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+Matrix matd_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+Matrix matx_Q1 = createMat(vecb_Q1.rows, vecb_Q1.cols);
+Matrix matL_Q1 = zeros(matA_Q1.rows, matA_Q1.cols); 
+Matrix matP_Q1 = eye(matA_Q1.rows, matA_Q1.cols);
+Matrix matAinv_Q1 = createMat(matA_Q1.rows, matA_Q1.cols);
+
+/// Q1
+printMat(matA_Q1, "matA_Q1");
+printMat(vecb_Q1, "vecb_Q1");
+
+//LUdecomp(matA_Q1, matL_Q1, matU_Q1, matP_Q1);
+//solveLU(matL_Q1, matU_Q1, matP_Q1, vecb_Q1, matx_Q1);//////
+
+invMat(matA_Q1, matAinv_Q1);            //Find inverse mat A
+matx_Q1 = multMat(matAinv_Q1, vecb_Q1); //x= (A^-1) * b
+
+//printMat(matU_Q1, "matU_Q1");
+printMat(matx_Q1, "matx_Q1");
+```
+
+
+
+---
+
+# fin
+
+
 
 ## solveLinear()
 
