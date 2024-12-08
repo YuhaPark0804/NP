@@ -1,6 +1,7 @@
 ---
 description: Numerical Method example
 
+
 ---
 
 # Example: API documentation
@@ -500,7 +501,7 @@ void odeFunc_mck(double dYdt[], const double t, const double Y[])
 
 -------------------------------------------------------------------------------------------------------
 
-## 
+
 
 
 
@@ -611,22 +612,155 @@ void odeFunc_mck(double dYdt[], const double t, const double Y[])
 
 
 
+### Pred_Corr\(\)
 
-## Class or Header name
+Solve ODE using explicit(predictor) and implicit(corrector)
 
-### Function Name
+predictor: Explicit formula to estimate the solution `y_i+1`
 
-```text
+Corrector: Use `y_i+1`(predictor) on implicit formula to obtain more accurate `y_i+1`
 
+```c
+void Pred_Corr(double y[], double odeFunc(const double t, const double y),
+	const double t0, const double tf, const double h, const double y_init);
 ```
 
 **Parameters**
 
-* p1
-* p2
+- **y\[\]**: Solution of ODE in structure 1D-array form. (y' = z(t))
+- **v\[\]**: Solution of ODE in structure 1D-array form. (y'' = z')
+
+* **odeFuncSys()**: Function **func** is defined.
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y_init** is initial value of **y\[\]**.
 
 **Example code**
 
-```text
+```c
+// Initial Conditions
+double a = 0;
+double b = 0.1;
+double h = 0.001;
 
+unsigned int N = ((b - a) / h) + 1;
+
+double y_PC[200]  = { 0 };
+
+// IVP initial values
+double y_init = 0;
+
+//Predictor-Corrector methods
+Pred_Corr(y_PC, odeFunc_rc, a, b, h, y_init);
+
+// Print outputs
+printf("----------------------------------------------------------------\n");
+printf("			       1st ODE - IVP  Results						\n");
+printf("----------------------------------------------------------------\n");
+
+printf("i\t t\t\t yEU\t\t yRK2\t\t yRK3\t\t yPC\t\t yAB\t \n\n");
+for (int i = 0; i < N; i++)
+	printf("%d\t %.5f\t %.5f\t %.5f\t %.5f\t %.5f\t %.5f\t \n", i, a + i * h, y_EU[i], y_RK2[i], y_RK3[i], y_PC[i], y_AB[i]);
+printf("\n");
+
+
+// Gradient function for ODE - 1st order 
+double odeFunc_rc(const double t, const double v)
+{
+	// Input:	 y, t
+	// Output:	 dydt 
+
+	// system modeling parameters 
+	double tau = 0.01;
+	double f = 100;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	double dvdt = 0;
+	
+	dvdt = -v/tau + (Vm / tau) * cos(omega * t);
+
+	return dvdt;
+}
 ```
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+### Adam_Bash3\(\)
+
+Solve 1st order ODE using explicit multi step
+
+```c
+void Adam_Bash3(double y[], double odeFunc(const double t, const double y), 
+	const double t0, const double tf, const double h, const double y_init);
+```
+
+**Parameters**
+
+- **y\[\]**: Solution of ODE in structure 1D-array form. (y' = z(t))
+- **v\[\]**: Solution of ODE in structure 1D-array form. (y'' = z')
+
+* **odeFuncSys()**: Function **func** is defined.
+
+* **t0** is starting point.
+* **tf** is ending point.
+* **h** is length of step.
+* **y_init** is initial value of **y\[\]**.
+
+**Example code**
+
+```c
+// Initial Conditions
+double a = 0;
+double b = 0.1;
+double h = 0.001;
+
+unsigned int N = ((b - a) / h) + 1;
+
+double y_AB[200] = { 0 };
+
+// IVP initial values
+double y_init = 0;
+
+//Adam-Bashforth 3-order methods
+Adam_Bash3(y_AB, odeFunc_rc, a, b, h, y_init);
+
+// Print outputs
+printf("----------------------------------------------------------------\n");
+printf("			       1st ODE - IVP  Results						\n");
+printf("----------------------------------------------------------------\n");
+
+printf("i\t t\t\t yEU\t\t yRK2\t\t yRK3\t\t yPC\t\t yAB\t \n\n");
+for (int i = 0; i < N; i++)
+	printf("%d\t %.5f\t %.5f\t %.5f\t %.5f\t %.5f\t %.5f\t \n", i, a + i * h, y_EU[i], y_RK2[i], y_RK3[i], y_PC[i], y_AB[i]);
+printf("\n");
+
+
+// Gradient function for ODE - 1st order 
+double odeFunc_rc(const double t, const double v)
+{
+	// Input:	 y, t
+	// Output:	 dydt 
+
+	// system modeling parameters 
+	double tau = 0.01;
+	double f = 100;
+	double Vm = 1;
+	double omega = 2 * PI * f;
+	double dvdt = 0;
+	
+	dvdt = -v/tau + (Vm / tau) * cos(omega * t);
+
+	return dvdt;
+}
+```
+
+
+
+
+
+
+
